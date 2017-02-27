@@ -26,7 +26,6 @@ timer = setInterval(function(){
 	if (timeAllowed - timeElapsed/1000  <= 0){
 		clearInterval(timer);
 		alert("You finished with a score of " + score + "!");
-		location.reload();
 	}
 },10)
 
