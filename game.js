@@ -15,7 +15,7 @@ var throttle = W/200;
 
 
 var startTime = Date.now();
-var timeAllowed = 60;
+var timeAllowed = 30;
 
 
 
