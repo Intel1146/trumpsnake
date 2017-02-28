@@ -24,11 +24,12 @@ var brickY = 0;
 var brickX = 0;
 var brickSize = W/5000;
 var brickStagger = random_int(0,brickSize * 604) //604px = brick picture width
+var soundBiteLength = 5;
+
 
 timer = setInterval(function(){
 	timeElapsed = Date.now() - startTime;
 	document.getElementById("time").innerHTML = "Time: " + (timeAllowed - (timeElapsed/1000)).toFixed(2);
-	console.log(timeAllowed - timeElapsed/1000);
 	if (timeAllowed - timeElapsed/1000  <= 0){
 		clearInterval(timer);
 		//alert("You finished with a score of " + score + "!");
@@ -41,11 +42,18 @@ timer = setInterval(function(){
 function preload() {
     game.load.image("trump","https://images-na.ssl-images-amazon.com/images/I/71r4nHPkV0L.png");
     game.load.image("brick",'assets/brick.png');
-
+    for (i=1;i<=soundBiteLength;i++){
+		game.load.audio("bite" + i,"sounds/bite" + i + ".ogg");
+		console.log("bite" + i);
+    }
 }
 
 function create() {
 	game.stage.backgroundColor = random_color();
+	audio = [];
+	for (i=1;i<=soundBiteLength;i++){
+		audio.push(game.add.audio("bite" + i));
+	}
 	cursorX = game.input.x;
 	cursorY = game.input.y;
 	transferCounter = 0;
@@ -150,6 +158,7 @@ function update() {
 		game.stage.backgroundColor = random_color();
 		score++;
 		document.getElementById("score").innerHTML = "Bricks: " + score;
+		audio[random_int(0,soundBiteLength - 1)].play();
 	}
 	
 	
