@@ -17,7 +17,14 @@ var throttle = W/200;
 var startTime = Date.now();
 var timeAllowed = 30;
 
+//Brick/Wall Management
+var brickTint = (random_int(99990,100000) / 100000) * 0xffffff;
 
+var brickY = 0;
+var brickX = 0;
+var bricks = [];
+var brickSize = W/10000;
+var brickStagger = random_int(0,brickSize * 604) //604px = brick picture width
 
 timer = setInterval(function(){
 	timeElapsed = Date.now() - startTime;
@@ -25,7 +32,7 @@ timer = setInterval(function(){
 	console.log(timeAllowed - timeElapsed/1000);
 	if (timeAllowed - timeElapsed/1000  <= 0){
 		clearInterval(timer);
-		alert("You finished with a score of " + score + "!");
+		//alert("You finished with a score of " + score + "!");
 	}
 },10)
 
@@ -34,7 +41,7 @@ timer = setInterval(function(){
 
 function preload() {
     game.load.image("trump","https://images-na.ssl-images-amazon.com/images/I/71r4nHPkV0L.png");
-    game.load.image("taco",'brick.png');
+    game.load.image("brick",'assets/brick.png');
 
 }
 
@@ -52,10 +59,28 @@ function create() {
 		trumps.push(newTrump);
 	}
 	
-	tacoSprite = game.add.sprite(random_int(0,wW),random_int(0,wH),"taco");
-	tacoSprite.anchor.set(0.5);
-	tacoSprite.scale.set(W/10000);
+	brickSprite = game.add.sprite(random_int(0,wW),random_int(0,wH),"brick");
+	brickSprite.anchor.set(0.5);
+	brickSprite.scale.set(brickSize);
 	
+}
+
+function addBrick(){
+	newBrick = game.add.sprite(0,0,"brick");
+	newBrick.scale.set(brickSize);
+	newBrick.anchor.setTo(0,1);
+	newBrick.tint = brickTint
+	brickTint = (random_int(99990,100000) / 100000) * 0xffffff;
+
+	newBrick.x = brickX * newBrick.width - brickStagger;
+	newBrick.y = wH - (brickY * newBrick.height);
+	brickX += 1;
+	if (newBrick.x + newBrick.width > wW){
+		brickY++;
+		brickStagger = random_int(0,604 * brickSize);
+		brickX = 0;
+	}
+	bricks.push(newBrick);
 }
 
 function update() {
@@ -115,9 +140,11 @@ function update() {
 
 	}
 	
-	if (collides(trumps[trumpLength - 1],tacoSprite)){
-		tacoSprite.x = random_int(0,wW);
-		tacoSprite.y = random_int(0,wH);
+	if (collides(trumps[trumpLength - 1],brickSprite)){
+		addBrick();
+		brickSprite.x = random_int(0,wW);
+		brickSprite.y = random_int(0,wH);
+		brickSprite.tint = brickTint;
 		game.stage.backgroundColor = random_color();
 		score++;
 		document.getElementById("score").innerHTML = "Bricks: " + score;
