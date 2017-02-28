@@ -53,7 +53,7 @@ function create() {
 	
 	tacoSprite = game.add.sprite(random_int(0,wW),random_int(0,wH),"taco");
 	tacoSprite.anchor.set(0.5);
-	tacoSprite.scale.set(W/10000);
+	tacoSprite.scale.set(W/1000);
 	
 }
 
