@@ -34,7 +34,7 @@ timer = setInterval(function(){
 
 function preload() {
     game.load.image("trump","https://images-na.ssl-images-amazon.com/images/I/71r4nHPkV0L.png");
-    game.load.image("taco","trumpsnake/assets/brick.png");
+    game.load.image("taco","assets/brick.png");
 }
 
 function create() {
@@ -53,7 +53,7 @@ function create() {
 	
 	tacoSprite = game.add.sprite(random_int(0,wW),random_int(0,wH),"taco");
 	tacoSprite.anchor.set(0.5);
-	tacoSprite.scale.set(W/1000);
+	tacoSprite.scale.set(W/10000);
 	
 }
 
