@@ -120,7 +120,7 @@ function update() {
 		tacoSprite.y = random_int(0,wH);
 		game.stage.backgroundColor = random_color();
 		score++;
-		document.getElementById("score").innerHTML = "Score: " + score;
+		document.getElementById("score").innerHTML = "Bricks: " + score;
 	}
 	
 	
