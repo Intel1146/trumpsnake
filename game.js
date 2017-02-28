@@ -42,6 +42,8 @@ timer = setInterval(function(){
 function preload() {
     game.load.image("trump","https://images-na.ssl-images-amazon.com/images/I/71r4nHPkV0L.png");
     game.load.image("brick",'assets/brick.png');
+    game.load.image("brickGlow",'assets/brick glow.png');
+
     for (i=1;i<=soundBiteLength;i++){
 		game.load.audio("bite" + i,"sounds/bite" + i + ".ogg");
 		console.log("bite" + i);
@@ -66,7 +68,7 @@ function create() {
 		trumps.push(newTrump);
 	}
 	
-	brickSprite = game.add.sprite(random_int(0,wW),random_int(0,wH),"brick");
+	brickSprite = game.add.sprite(random_int(0,wW),random_int(0,wH),"brickGlow");
 	brickSprite.anchor.set(0.5);
 	brickSprite.scale.set(brickSize);
 	
