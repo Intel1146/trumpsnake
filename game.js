@@ -1,17 +1,19 @@
 /* this is where phaser code goes */
 var wW = window.innerWidth;
 var wH = window.innerHeight;
+var speed = 6;
 
 var W = screen.width;
 var H = screen.height;
 var score = 0;
 var game = new Phaser.Game(wW, wH, Phaser.CANVAS,'', { preload: preload, create: create, update: update});
 var cursorPositions = [];
-var trumpLength = 40;
+var trumpLength = 40 * speed;
 var trumps = [];
 var transferSpeed = 1;
 
-var throttle = W/200;
+
+var throttle = W/200 * (speed/3);
 
 
 var startTime = Date.now();
@@ -25,7 +27,8 @@ var brickX = 0;
 var brickSize = W/5000;
 var brickStagger = random_int(0,brickSize * 604) //604px = brick picture width
 var soundBiteLength = 5;
-
+var slowThrottle = throttle / 2;
+var fastThrottle = throttle;
 
 timer = setInterval(function(){
 	timeElapsed = Date.now() - startTime;
@@ -63,7 +66,7 @@ function create() {
 	for (i=trumpLength - 1;i>=0;i--){
 		newTrump = game.add.sprite(cursorX,cursorY,"trump");
 		newTrump.anchor.set(0.5);
-		newTrump.scale.set((((trumpLength * 1.7) - i)/500)    *    (W/1000));
+		newTrump.scale.set((((trumpLength * 1.7) - i)/500)    *    (W/1000)/speed);
 		cursorPositions.push([500,500]);
 		trumps.push(newTrump);
 	}
@@ -81,8 +84,8 @@ function addBrick(){
 	newBrick.tint = brickTint
 	brickTint = (random_int(99990,100000) / 100000) * 0xffffff;
 
-	newBrick.x = brickX * newBrick.width - brickStagger;
-	newBrick.y = wH - (brickY * newBrick.height);
+	newBrick.x = brickX * newBrick.width * 0.98 - brickStagger;
+	newBrick.y = wH - (brickY * newBrick.height * 0.98);
 	brickX += 1;
 	if (newBrick.x + newBrick.width > wW){
 		brickY++;
@@ -92,32 +95,33 @@ function addBrick(){
 	brickGroup.add(newBrick);
 }
 
+
 function update() {
 
 	cursorX = game.input.x;
 	cursorY = game.input.y;
 
-
-	if (transferCounter == transferSpeed){
-		
-
-
-		transferCounter = 0;
-		for (i=1;i<trumpLength;i++){
-			
-			
-			
-			cursorPositions[i - 1][0] = cursorPositions[i][0];
-			cursorPositions[i - 1][1] = cursorPositions[i][1];
-	
-			
-			
-			
-			
-	
-		}
-		
+	if(game.input.pointer1.isDown || game.input.mousePointer.isDown){
+		throttle = fastThrottle;
 	}
+	else{
+		throttle = slowThrottle;
+	}
+
+
+	for (i=speed;i<trumpLength + speed;i++){
+		if (i + speed > trumpLength){
+			cursorPositions[i - speed][0] = cursorPositions[trumpLength - 1][0];
+			cursorPositions[i - speed][1] = cursorPositions[trumpLength - 1][1];
+
+		}
+		else{
+			cursorPositions[i - speed][0] = cursorPositions[i][0];
+			cursorPositions[i - speed][1] = cursorPositions[i][1];
+		}
+	}
+
+
 
 	var angle = Math.atan2(cursorY - cursorPositions[trumpLength - 1][1],cursorX - cursorPositions[trumpLength - 1][0]);
 	
@@ -145,11 +149,8 @@ function update() {
 	}
 
 	for (i=0;i<trumpLength;i++){
-		
-
 		trumps[i].x = cursorPositions[i][0];
 		trumps[i].y = cursorPositions[i][1];
-
 	}
 	
 	if (collides(trumps[trumpLength - 1],brickSprite)){
