@@ -35,6 +35,7 @@ timer = setInterval(function(){
 function preload() {
     game.load.image("trump","https://images-na.ssl-images-amazon.com/images/I/71r4nHPkV0L.png");
     game.load.image("taco","brick.png");
+
 }
 
 function create() {
