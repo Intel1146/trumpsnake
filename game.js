@@ -31,9 +31,10 @@ timer = setInterval(function(){
 
 
 
+
 function preload() {
     game.load.image("trump","https://images-na.ssl-images-amazon.com/images/I/71r4nHPkV0L.png");
-    game.load.image("taco","http://vignette3.wikia.nocookie.net/starwarfare/images/a/a5/Taco_with_no_background.png/revision/latest?cb=20140320095932");
+    game.load.image("taco","/assets/brick.png");
 }
 
 function create() {
