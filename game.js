@@ -3,8 +3,12 @@ var wW = window.innerWidth;
 var wH = window.innerHeight;
 var speed = 6;
 
-var W = screen.width;
-var H = screen.height;
+
+if (wW > wH){
+	wW = wH / 1.5;
+}
+
+
 var score = 0;
 var game = new Phaser.Game(wW, wH, Phaser.CANVAS,'', { preload: preload, create: create, update: update});
 var cursorPositions = [];
@@ -13,7 +17,7 @@ var trumps = [];
 var transferSpeed = 1;
 
 
-var throttle = W/200 * (speed/3);
+var throttle = wW/100 * (speed/3);
 
 
 var startTime = Date.now();
