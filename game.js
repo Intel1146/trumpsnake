@@ -26,7 +26,7 @@ var brickY = 0;
 var brickX = 0;
 var brickSize = W/5000;
 var brickStagger = random_int(0,brickSize * 604) //604px = brick picture width
-var soundBiteLength = 5;
+var soundBiteLength = 9;
 var slowThrottle = throttle / 2;
 var fastThrottle = throttle;
 
