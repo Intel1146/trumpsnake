@@ -43,18 +43,21 @@ timer = setInterval(function(){
 
 
 function preload() {
+	game.load.image("background","assets/background.png");
     game.load.image("trump","https://images-na.ssl-images-amazon.com/images/I/71r4nHPkV0L.png");
     game.load.image("brick",'assets/brick.png');
     game.load.image("brickGlow",'assets/brick glow.png');
 
     for (i=1;i<=soundBiteLength;i++){
 		game.load.audio("bite" + i,"sounds/bite" + i + ".ogg");
-		console.log("bite" + i);
     }
 }
 
 function create() {
-	game.stage.backgroundColor = random_color();
+	backgroundSprite = game.add.sprite(0,wH,"background");
+	backgroundSprite.anchor.setTo(0,1);
+	backgroundSprite.scale.set(wW/1000);
+	
 	audio = [];
 	for (i=1;i<=soundBiteLength;i++){
 		audio.push(game.add.audio("bite" + i));
@@ -85,12 +88,19 @@ function addBrick(){
 	brickTint = (random_int(99990,100000) / 100000) * 0xffffff;
 
 	newBrick.x = brickX * newBrick.width * 0.98 - brickStagger;
-	newBrick.y = wH - (brickY * newBrick.height * 0.98);
+	newBrick.y = wH - (brickY * newBrick.height * 0.98) - (wH - backgroundSprite.y);
 	brickX += 1;
 	if (newBrick.x + newBrick.width > wW){
 		brickY++;
 		brickStagger = random_int(0,604 * brickSize);
 		brickX = 0;
+		if (brickY * newBrick.height - (wH - backgroundSprite.y) > wH / 4){
+			backgroundSprite.y += newBrick.height;
+			brickGroup.forEach(function(brick){
+				brick.y += newBrick.height;
+			});
+			newBrick.y += newBrick.height;
+		}
 	}
 	brickGroup.add(newBrick);
 }
