@@ -24,7 +24,7 @@ var brickTint = (random_int(99990,100000) / 100000) * 0xffffff;
 
 var brickY = 0;
 var brickX = 0;
-var brickSize = W/5000;
+var brickSize = wW/2000;
 var brickStagger = random_int(0,brickSize * 604) //604px = brick picture width
 var soundBiteLength = 9;
 var slowThrottle = throttle / 2;
@@ -69,7 +69,7 @@ function create() {
 	for (i=trumpLength - 1;i>=0;i--){
 		newTrump = game.add.sprite(cursorX,cursorY,"trump");
 		newTrump.anchor.set(0.5);
-		newTrump.scale.set((((trumpLength * 1.7) - i)/500)    *    (W/1000)/speed);
+		newTrump.scale.set((((trumpLength * 1.7) - i)/500)    *    (wW/500)/speed);
 		cursorPositions.push([500,500]);
 		trumps.push(newTrump);
 	}
