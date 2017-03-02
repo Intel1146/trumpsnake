@@ -4,7 +4,7 @@ var wH = window.innerHeight;
 var speed = 6;
 
 
-if (wW > wH){
+if (wW > wH/1.5){
 	wW = wH / 1.5;
 }
 
@@ -18,7 +18,6 @@ var transferSpeed = 1;
 
 
 var throttle = wW/100 * (speed/3);
-
 
 var startTime = Date.now();
 var timeAllowed = 30;
@@ -34,14 +33,7 @@ var soundBiteLength = 9;
 var slowThrottle = throttle / 2;
 var fastThrottle = throttle;
 
-timer = setInterval(function(){
-	timeElapsed = Date.now() - startTime;
-	document.getElementById("time").innerHTML = "Time: " + (timeAllowed - (timeElapsed/1000)).toFixed(2);
-	if (timeAllowed - timeElapsed/1000  <= 0){
-		clearInterval(timer);
-		//alert("You finished with a score of " + score + "!");
-	}
-},10)
+
 
 
 
@@ -58,16 +50,19 @@ function preload() {
 }
 
 function create() {
-	backgroundSprite = game.add.sprite(0,wH,"background");
-	backgroundSprite.anchor.setTo(0,1);
+
+	backgroundSprite = game.add.sprite(0,0,"background");
+	backgroundSprite.anchor.setTo(0,0);
 	backgroundSprite.scale.set(wW/1000);
-	
+	heightOfGame = backgroundSprite.height;
+	game.world.setBounds(0, 0, wW, heightOfGame);
+	game.camera.y = backgroundSprite.height - wH;
 	audio = [];
 	for (i=1;i<=soundBiteLength;i++){
 		audio.push(game.add.audio("bite" + i));
 	}
 	cursorX = game.input.x;
-	cursorY = game.input.y;
+	cursorY = game.input.y  + (backgroundSprite.height - backgroundSprite.y)/4;
 	transferCounter = 0;
 	brickGroup = game.add.group();
 	for (i=trumpLength - 1;i>=0;i--){
@@ -78,10 +73,9 @@ function create() {
 		trumps.push(newTrump);
 	}
 	
-	brickSprite = game.add.sprite(random_int(0,wW),random_int(0,wH),"brickGlow");
+	brickSprite = game.add.sprite(random_int(0,wW),random_int(0,wH) + game.camera.y ,"brickGlow");
 	brickSprite.anchor.set(0.5);
 	brickSprite.scale.set(brickSize);
-	
 }
 
 function addBrick(){
@@ -92,28 +86,26 @@ function addBrick(){
 	brickTint = (random_int(99990,100000) / 100000) * 0xffffff;
 
 	newBrick.x = brickX * newBrick.width * 0.98 - brickStagger;
-	newBrick.y = wH - (brickY * newBrick.height * 0.98) - (wH - backgroundSprite.y);
+	newBrick.y = heightOfGame - (brickY * newBrick.height * 0.98);
 	brickX += 1;
+	brickGroup.add(newBrick);
 	if (newBrick.x + newBrick.width > wW){
 		brickY++;
 		brickStagger = random_int(0,604 * brickSize);
 		brickX = 0;
-		if (brickY * newBrick.height - (wH - backgroundSprite.y) > wH / 4){
-			backgroundSprite.y += newBrick.height;
-			brickGroup.forEach(function(brick){
-				brick.y += newBrick.height;
-			});
-			newBrick.y += newBrick.height;
+		if (brickY * newBrick.height > wH / 6){
+    		game.add.tween(game.camera).to( { y: game.camera.y - newBrick.height }, 500, "Linear", true);
 		}
 	}
-	brickGroup.add(newBrick);
+
 }
 
 
 function update() {
 
 	cursorX = game.input.x;
-	cursorY = game.input.y;
+	cursorY = game.input.y  + game.camera.y;
+
 
 	if(game.input.pointer1.isDown || game.input.mousePointer.isDown){
 		throttle = fastThrottle;
@@ -170,7 +162,7 @@ function update() {
 	if (collides(trumps[trumpLength - 1],brickSprite)){
 		addBrick();
 		brickSprite.x = random_int(0,wW);
-		brickSprite.y = random_int(0,wH);
+		brickSprite.y = random_int(0,wH)  + game.camera.y;
 		brickSprite.tint = brickTint;
 		game.stage.backgroundColor = random_color();
 		score++;
